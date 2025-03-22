@@ -1,35 +1,17 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
+import useLogin from '../Hooks/useLogin';
 import Home from './Home';
 import AnonymusUserComponents from './AnonymusUserComponents';
 
 export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef('');
-    const [error, setError] = useState('');
-    const [user, setUser] = useState(null);
+    const { user, error, login, logout } = useLogin();
 
     const handleLogin = () => {
         const email = emailRef.current.value.trim();
         const password = passwordRef.current.value.trim();
-
-        // Validación de campos vacíos
-        if (!email || !password) {
-            setError('Por favor, complete todos los campos');
-            return;
-        }
-
-        // Validación de credenciales
-        if (email === 'admin' && password === '123456') {
-            setUser({ email }); // Guardar el correo del usuario
-            setError('');
-            alert('Bienvenido');
-        } else {
-            setError('Datos incorrectos');
-        }
-    };
-
-    const handleLogout = () => {
-        setUser(null);
+        login(email, password);
     };
 
     return (
@@ -46,7 +28,7 @@ export default function Login() {
             ) : (
                 <div>
                     <Home email={user.email} />
-                    <button onClick={handleLogout}>Cerrar sesión</button>
+                    <button onClick={logout}>Cerrar sesión</button>
                 </div>
             )}
         </>
